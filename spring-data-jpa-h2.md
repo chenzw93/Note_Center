@@ -25,3 +25,14 @@ public void export(@Param("path") String path)
 >
 > 1. @Query中必须设置nativeQuery为true，即为原生sql
 > 2. 如果path是可变的，则必须使用{call CSVWRITE(:param, 'sql')}
+
+###### 1.1 调用内置函数，如果sql要拼接，不能使用占位符等动态赋值，可以的操作是：
+
+```java
+@Query(value= "{call CSVWRITE(:path,:sql,'')}", nativeQuery = true)
+public void export(@Param("path") String path,@Param("sql") String sql)
+```
+
+##### 2. `spring-data-jpa`查询多余一个字段但不是所有字段时，无论使用原生的sql(即nativeQuery=true)或者使用`Entity`查询，都返回的的是`Object[]`
+
+ 
