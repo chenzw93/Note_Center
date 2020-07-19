@@ -1,0 +1,65 @@
+<Configuration status="WARN" monitorInterval="300">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+        </Console>
+        <!--文件会打印出所有信息，append代表日志是否会持续输出，并保留之前的-->
+        <!--<File name="log" fileName="target/runlog.log" append="true">-->
+        <!--<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--</File>-->
+        <!--
+            RollingRandomAccessFile与RollingFile：
+
+            immediateFlush默认true，实时刷新到日志文件中，一般设置为false
+        -->
+        <RollingRandomAccessFile name="rollingRandomFile" immediateFlush="false"
+                                 fileName="logs/app.log"
+                                 filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd HH-mm}-%i.log">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <!--每个log文件大小最大值-->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+        <!--<RollingFile name="infoFile" fileName="logs/app.log" immediateFlush="false"-->
+        <!--filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">-->
+        <!--<PatternLayout pattern="%d{yyyy.MM.dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+        <!--<TimeBasedTriggeringPolicy interval="1"/>-->
+        <!--<SizeBasedTriggeringPolicy size="10 MB"/>-->
+        <!--<DefaultRolloverStrategy max="10"/>-->
+        <!--</RollingFile>-->
+    </Appenders>
+
+    <Loggers>
+        <!--
+            Logger:
+                1. name: 指定某个类对应日志输出
+                2. level: 日志级别 日志级别按照从低到高为：All < Trace < Debug < Info < Warn < Error < Fatal < OFF.
+                        程序会打印高于或等于所设置级别的日志，设置的日志等级越高，打印出来的日志就越少
+                3. additivity: 默认为true，一般赋值为false。如果为ture，日志可能会被打印两次
+        -->
+        <!--<Logger name="com.demo.log4j2" level="debug" additivity="false">-->
+        <!--&lt;!&ndash;-->
+        <!--AppenderRef:-->
+        <!--ref: 指定以何种形式进行日志打印，值需要在标签<Appenders>中的<Console>标签中定义。如此处Console，即是上述进行了定义-->
+        <!--&ndash;&gt;-->
+        <!--<AppenderRef ref="Console"/>-->
+        <!--</Logger>-->
+        <!--<logger name="org.springframework" level="INFO"></logger>-->
+        <!--
+            Root:
+                除上述Logger标签中定义的类以外，其他的类都以这种级别进行日志打印，<AppenderRef>可以引用多个
+        -->
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="rollingRandomFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
