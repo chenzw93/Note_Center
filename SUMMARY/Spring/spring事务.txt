@@ -1,0 +1,38 @@
+org.springframework.transaction.annotation.SpringTransactionAnnotationParser --- @Transactional解析类
+
+org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration --- spring事务的自动装配类
+
+org.springframework.transaction.PlatformTransactionManager -- Spring事务管理器的核心接口
+	实现类：
+		* org.springframework.jdbc.datasource.DataSourceTransactionManager 
+
+开启Spring的事务目前有两种方式
+* 使用EnableTransactionManagement开启事务
+* 
+
+
+SpringBoot的AutoConfiguration类有两个地方存储，一个是META-INF/spring.factories(2.4.x版本还是所有的AutoConfiguration都在这个文件)，另外一个是META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports(目前看2.7.x版本把AutoConfiguration拆分到这个文件中保存了)
+
+
+
+
+
+org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator#postProcessProperties
+
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#initializeBean  --- bean在populate之后，初始化bean，在这里会调用Aware、postProcessBeforeInitialization、init、postProcessAfterInitialization
+	org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization --- bean的代理类产生的地方
+		|
+		|__org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator
+			
+		org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#createProxy
+			org.springframework.aop.framework.ProxyFactory#getProxy(java.lang.ClassLoader)
+			org.springframework.aop.framework.ProxyFactory#getProxy(java.lang.ClassLoader) --- 获取代理类
+
+org.springframework.beans.factory.config.DependencyDescriptor#resolveCandidate 如果有依赖的bean，调用这个方法实现依赖bean的初始化，实质还是通过beanFactory.getBean
+
+
+	org.springframework.aop.framework.CglibAopProxy
+		|
+		|_org.springframework.aop.framework.ObjenesisCglibAopProxy
+
+
