@@ -1,5 +1,3 @@
-[TOC]
-
 #### 使用框架 `springboot` + `spring-data-jpa` + `h2`搭建服务，遇到问题记录
 
 [Spring-Data-JPA](https://spring.io/projects/spring-data-jpa)
